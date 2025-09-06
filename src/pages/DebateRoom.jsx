@@ -17,7 +17,7 @@ export default function DebateRoom() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}` // 여기에 API Key
+        "Authorization": `Bearer ${import.meta.env.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}` // 여기에 API Key
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
