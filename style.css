@@ -1,53 +1,99 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
   display: flex;
   justify-content: center;
-  padding: 30px;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
 .app {
   background: #fff;
   padding: 20px;
-  border-radius: 12px;
-  width: 500px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 16px;
+  width: 450px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
 h1 {
   text-align: center;
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: #333;
+}
+
+#topic {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
 #chat {
+  flex: 1;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  height: 300px;
+  border-radius: 12px;
+  padding: 15px;
+  background: #fafafa;
   overflow-y: auto;
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .message {
-  margin: 5px 0;
-  padding: 8px;
-  border-radius: 8px;
-  white-space: pre-wrap;
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.4;
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .user {
-  background: #d1e7dd;
+  background: #007bff;
+  color: #fff;
   align-self: flex-end;
+  border-bottom-right-radius: 4px;
 }
 
 .ai {
-  background: #f8d7da;
+  background: #f44336;
+  color: #fff;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
 }
+
 .input-area {
   display: flex;
-  gap: 5px;
+  gap: 8px;
+  margin-top: 12px;
 }
+
 .input-area input {
   flex: 1;
-  padding: 8px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  outline: none;
+}
+
+.input-area button {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.input-area button:hover {
+  background: #218838;
 }
