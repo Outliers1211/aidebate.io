@@ -1,55 +1,66 @@
-const chatBox = document.getElementById("chat-box");
-const userInput = document.getElementById("user-input");
-const debateRoom = document.getElementById("debate-room");
-const topicSelection = document.getElementById("topic-selection");
-const topicTitle = document.getElementById("topic-title");
+const chatBox = document.getElementById("chat");
+const userInput = document.getElementById("userInput");
+const topicInput = document.getElementById("topic");
 
-let currentTopic = "";
+const WORKER_URL = "https://ai-debate-worker.jeonjaehyeok1211.workers.dev";
 
-// 토론 시작
-function startDebate(topic) {
-  currentTopic = topic;
-  topicTitle.textContent = topic;
-  topicSelection.style.display = "none";
-  debateRoom.style.display = "block";
-  chatBox.innerHTML = "";
+function addMessage(text, sender) {
+  const msg = document.createElement("div");
+  msg.classList.add("message", sender);
+  msg.textContent = text;
+  chatBox.appendChild(msg);
+  chatBox.scrollTop = chatBox.scrollHeight;
+  return msg;
 }
 
-// 메시지 전송
 async function sendMessage() {
   const msg = userInput.value.trim();
-  if (!msg) return;
+  const topic = topicInput.value.trim();
+  if (!msg || !topic) return;
 
   addMessage(msg, "user");
   userInput.value = "";
 
+  const aiContainer = addMessage("...", "ai");
+
   try {
-    const res = await fetch("https://ai-debate-worker.jeonjaehyeok1211.workers.dev", { // 여기를 본인 Worker URL로 변경
+    const res = await fetch(WORKER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ topic: currentTopic, userMessage: msg })
+      body: JSON.stringify({ topic, userMessage: msg })
     });
 
-    const data = await res.json();
-    const aiReply = data.choices[0].message.content;
-    addMessage(aiReply, "ai");
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = "";
 
+    aiContainer.textContent = ""; // 초기화
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
+
+      for (let line of lines) {
+        if (line.startsWith("data: ")) {
+          const data = line.replace("data: ", "").trim();
+          if (data === "[DONE]") return;
+
+          try {
+            const json = JSON.parse(data);
+            const token = json.choices[0]?.delta?.content || "";
+            aiContainer.textContent += token;
+            chatBox.scrollTop = chatBox.scrollHeight;
+          } catch (e) {
+            console.error("파싱 오류:", e);
+          }
+        }
+      }
+    }
   } catch (err) {
-    addMessage("AI 응답 실패: " + err.message, "ai");
+    aiContainer.textContent = "AI 응답 실패: " + err.message;
   }
-}
-
-// 채팅에 메시지 추가
-function addMessage(message, sender) {
-  const div = document.createElement("div");
-  div.className = sender;
-  div.textContent = message;
-  chatBox.appendChild(div);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// 뒤로가기
-function goBack() {
-  debateRoom.style.display = "none";
-  topicSelection.style.display = "block";
 }
