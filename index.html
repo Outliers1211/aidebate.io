@@ -6,27 +6,19 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
+  <div class="app">
     <h1>AI 찬반 토론</h1>
-    
-    <div id="topic-selection">
-      <h2>토론 주제를 선택하세요</h2>
-      <ul>
-        <li><button onclick="startDebate('AI는 일자리를 빼앗는다')">AI는 일자리를 빼앗는다</button></li>
-        <li><button onclick="startDebate('AI 예술은 진정한 예술이다')">AI 예술은 진정한 예술이다</button></li>
-        <li><button onclick="startDebate('AI가 인간보다 더 윤리적일 수 있다')">AI가 인간보다 더 윤리적일 수 있다</button></li>
-      </ul>
-    </div>
 
-    <div id="debate-room" style="display:none;">
-      <h2 id="topic-title"></h2>
-      <div id="chat-box"></div>
-      <input type="text" id="user-input" placeholder="메시지를 입력하세요" />
+    <label for="topic">토론 주제:</label>
+    <input type="text" id="topic" placeholder="예: AI는 인간의 일자리를 빼앗을까?">
+
+    <div id="chat"></div>
+
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="메시지를 입력하세요...">
       <button onclick="sendMessage()">보내기</button>
-      <button onclick="goBack()">뒤로가기</button>
     </div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
