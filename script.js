@@ -81,3 +81,4 @@ async function sendMessage() {
 window.onload = () => {
   addMessage("--- 입론 단계 시작 ---", "system");
 };
+
