@@ -1,70 +1,93 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  font-family: "Noto Sans KR", sans-serif;
+  background: #f4f7fb;
   display: flex;
   justify-content: center;
-  padding: 30px;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
 }
 
-.app {
-  background: #fff;
+#app {
+  background: white;
+  width: 90%;
+  max-width: 800px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  border-radius: 12px;
-  width: 500px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 h1 {
   text-align: center;
+  color: #333;
+  margin-bottom: 10px;
 }
 
-#chat {
+.chat-box {
   border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  height: 300px;
+  border-radius: 10px;
+  height: 400px;
   overflow-y: auto;
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: column;
+  padding: 10px;
+  background: #fafafa;
 }
 
 .message {
-  margin: 5px 0;
-  padding: 8px;
-  border-radius: 8px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 80%;
 }
 
 .user {
-  background: #d1e7dd;
-  align-self: flex-end;
+  background: #d0ebff;
+  text-align: right;
+  margin-left: auto;
 }
 
 .ai {
-  background: #f8d7da;
+  background: #e6e6e6;
+  text-align: left;
+  margin-right: auto;
+}
+
+.system {
+  text-align: center;
+  color: #888;
+  font-style: italic;
 }
 
 .input-area {
   display: flex;
-  gap: 5px;
+  margin-top: 15px;
 }
 
-.input-area input {
+input {
   flex: 1;
-  padding: 8px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
 }
 
-.input-area button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  background-color: #007BFF;
+button {
+  background: #0078ff;
   color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-left: 8px;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-.input-area button:hover {
-  background-color: #0056b3;
+button:hover {
+  background: #005fcc;
+}
+
+.stage {
+  text-align: center;
+  margin: 10px 0;
+  font-weight: bold;
+  color: #0078ff;
 }
