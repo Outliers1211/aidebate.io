@@ -11,6 +11,7 @@ let turnIndex = 0;
 const chatBox = document.getElementById("chatBox");
 const stageLabel = document.getElementById("stage");
 const userInput = document.getElementById("userInput");
+const topicInput = document.getElementById("topic");
 
 
 function addMessage(text, sender) {
@@ -22,7 +23,6 @@ function addMessage(text, sender) {
 }
 
 async function getAIResponse(prompt) {
-  const topicInput = document.getElementById("topic");
   try {
     const res = await fetch("https://ai-debate-worker.jeonjaehyeok1211.workers.dev", {
       method: "POST",
