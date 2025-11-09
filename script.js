@@ -84,4 +84,4 @@ async function sendMessage() {
 // 시작 시: AI가 기다리고 인간이 먼저 입론
 window.onload = () => {
   addMessage("--- 입론 단계 시작 ---", "system");
-};                                                                                                                                              여기에서 CORS에러가 떠
+}; 
