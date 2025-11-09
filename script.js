@@ -1,9 +1,7 @@
 const stages = [
-  { name: "입론", order: ["user"] },
-  { name: "교차조사", order: ["ai"] },
-  { name: "입론", order: ["ai"] },
-  { name: "교차조사", order: ["user"] },
-  { name: "반론", order: ["ai", "user", "user", "ai"] },
+  { name: "입론", order: ["user", "ai"] },
+  { name: "교차조사", order: ["ai", "user"] },
+  { name: "반론", order: ["ai", "user"] },
   { name: "결론", order: ["user", "ai"] },
 ];
 
@@ -14,6 +12,7 @@ const chatBox = document.getElementById("chatBox");
 const stageLabel = document.getElementById("stage");
 const userInput = document.getElementById("userInput");
 const topicInput = document.getElementById("topic");
+
 
 function addMessage(text, sender) {
   const msg = document.createElement("div");
@@ -30,7 +29,7 @@ async function getAIResponse(prompt) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         role: "반대측",
-        topic: topicInput.value,
+        topic: topicInput,
         stage: stages[stageIndex].name,
         prompt,
       }),
@@ -42,59 +41,47 @@ async function getAIResponse(prompt) {
   }
 }
 
-async function processTurn() {
-  if (stageIndex >= stages.length) {
-    stageLabel.innerText = "토론 종료";
-    addMessage("✅ 토론이 모두 종료되었습니다!", "system");
-    return;
-  }
-
-  const currentTurn = stages[stageIndex].order[turnIndex];
-
-  if (currentTurn === "user") {
-    // 사용자가 입력할 때까지 기다리기
-    stageLabel.innerText = `${stages[stageIndex].name} 단계 - 사용자 발언 차례`;
-    return;
-  }
-
-  if (currentTurn === "ai") {
-    stageLabel.innerText = `${stages[stageIndex].name} 단계 - AI 발언 중...`;
-    const aiReply = await getAIResponse("AI가 다음 발언합니다.");
-    addMessage("반대측: " + aiReply, "ai");
-    turnIndex++;
-    // 다음 턴 자동 진행
-    processTurn();
-  }
-}
-
 async function sendMessage() {
   const text = userInput.value.trim();
   const topic = topicInput.value.trim();
   if (!text || !topic) return;
-
   const currentTurn = stages[stageIndex].order[turnIndex];
 
-  if (currentTurn !== "user") return; // 사용자의 차례가 아니면 무시
-
-  addMessage("찬성측: " + text, "user");
-  userInput.value = "";
-  turnIndex++;
-
-  if (turnIndex >= stages[stageIndex].order.length) {
-    // 다음 단계로 넘어가기
-    stageIndex++;
-    turnIndex = 0;
-    if (stageIndex < stages.length) {
-      addMessage(`--- ${stages[stageIndex].name} 단계 시작 ---`, "system");
+  if (currentTurn === "user") {
+    addMessage("찬성측: " + text, "user");
+    userInput.value = "";
+    turnIndex++;
+    if (
+      turnIndex < stages[stageIndex].order.length &&
+      stages[stageIndex].order[turnIndex] === "ai"
+    ) {
+      const aiReply = await getAIResponse(text);
+      addMessage("반대측: " + aiReply, "ai");
+      turnIndex++;
     }
   }
 
-  // 다음 턴 처리
-  processTurn();
+  if (turnIndex >= stages[stageIndex].order.length) {
+    stageIndex++;
+    if (stageIndex < stages.length) {
+      turnIndex = 0;
+      stageLabel.innerText = `${stages[stageIndex].name} 단계 - ${
+        stages[stageIndex].order[0] === "ai" ? "AI" : "인간"
+      } 먼저 발언`;
+      addMessage(`--- ${stages[stageIndex].name} 단계 시작 ---`, "system");
+      if (stages[stageIndex].order[0] === "ai") {
+        const aiIntro = await getAIResponse("다음 단계로 넘어감");
+        addMessage("반대(AI): " + aiIntro, "ai");
+        turnIndex++;
+      }
+    } else {
+      stageLabel.innerText = "토론 종료";
+      addMessage("✅ 토론이 모두 종료되었습니다!", "system");
+    }
+  }
 }
 
-// 시작 시 첫 단계 처리
+// 시작 시: AI가 기다리고 인간이 먼저 입론
 window.onload = () => {
-  addMessage(`--- ${stages[stageIndex].name} 단계 시작 ---`, "system");
-  processTurn();
-};
+  addMessage("--- 입론 단계 시작 ---", "system");
+};                                                                                                                                              여기에서 CORS에러가 떠
