@@ -22,7 +22,7 @@ function addMessage(text, sender) {
 
 async function getAIResponse(prompt) {
   try {
-    const res = await fetch("https://debate-ai-worker.yourname.workers.dev/", {
+    const res = await fetch("ai-debate-worker.jeonjaehyeok1211.workers.dev", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
