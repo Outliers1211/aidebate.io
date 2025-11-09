@@ -1,66 +1,83 @@
-const chatBox = document.getElementById("chat");
-const userInput = document.getElementById("userInput");
-const topicInput = document.getElementById("topic");
+const stages = [
+  { name: "입론", order: ["user", "ai"] },
+  { name: "교차조사", order: ["ai", "user"] },
+  { name: "반론", order: ["ai", "user"] },
+  { name: "결론", order: ["user", "ai"] },
+];
 
-const WORKER_URL = "https://ai-debate-worker.jeonjaehyeok1211.workers.dev";
+let stageIndex = 0;
+let turnIndex = 0;
+
+const chatBox = document.getElementById("chatBox");
+const stageLabel = document.getElementById("stage");
+const userInput = document.getElementById("userInput");
 
 function addMessage(text, sender) {
   const msg = document.createElement("div");
   msg.classList.add("message", sender);
-  msg.textContent = text;
+  msg.innerText = text;
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
-  return msg;
+}
+
+async function getAIResponse(prompt) {
+  try {
+    const res = await fetch("https://debate-ai-worker.yourname.workers.dev/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        role: "반대측",
+        stage: stages[stageIndex].name,
+        prompt,
+      }),
+    });
+    const data = await res.json();
+    return data.reply || "AI 응답 오류";
+  } catch (e) {
+    return "⚠️ AI 응답을 가져오지 못했습니다.";
+  }
 }
 
 async function sendMessage() {
-  const msg = userInput.value.trim();
-  const topic = topicInput.value.trim();
-  if (!msg || !topic) return;
+  const text = userInput.value.trim();
+  if (!text) return;
+  const currentTurn = stages[stageIndex].order[turnIndex];
 
-  addMessage(msg, "user");
-  userInput.value = "";
-
-  const aiContainer = addMessage("...", "ai");
-
-  try {
-    const res = await fetch(WORKER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ topic, userMessage: msg })
-    });
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let buffer = "";
-
-    aiContainer.textContent = ""; // 초기화
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = lines.pop();
-
-      for (let line of lines) {
-        if (line.startsWith("data: ")) {
-          const data = line.replace("data: ", "").trim();
-          if (data === "[DONE]") return;
-
-          try {
-            const json = JSON.parse(data);
-            const token = json.choices[0]?.delta?.content || "";
-            aiContainer.textContent += token;
-            chatBox.scrollTop = chatBox.scrollHeight;
-          } catch (e) {
-            console.error("파싱 오류:", e);
-          }
-        }
-      }
+  if (currentTurn === "user") {
+    addMessage("찬성(인간): " + text, "user");
+    userInput.value = "";
+    turnIndex++;
+    if (
+      turnIndex < stages[stageIndex].order.length &&
+      stages[stageIndex].order[turnIndex] === "ai"
+    ) {
+      const aiReply = await getAIResponse(text);
+      addMessage("반대(AI): " + aiReply, "ai");
+      turnIndex++;
     }
-  } catch (err) {
-    aiContainer.textContent = "AI 응답 실패: " + err.message;
+  }
+
+  if (turnIndex >= stages[stageIndex].order.length) {
+    stageIndex++;
+    if (stageIndex < stages.length) {
+      turnIndex = 0;
+      stageLabel.innerText = `${stages[stageIndex].name} 단계 - ${
+        stages[stageIndex].order[0] === "ai" ? "AI" : "인간"
+      } 먼저 발언`;
+      addMessage(`--- ${stages[stageIndex].name} 단계 시작 ---`, "system");
+      if (stages[stageIndex].order[0] === "ai") {
+        const aiIntro = await getAIResponse("다음 단계로 넘어감");
+        addMessage("반대(AI): " + aiIntro, "ai");
+        turnIndex++;
+      }
+    } else {
+      stageLabel.innerText = "토론 종료";
+      addMessage("✅ 토론이 모두 종료되었습니다!", "system");
+    }
   }
 }
+
+// 시작 시: AI가 기다리고 인간이 먼저 입론
+window.onload = () => {
+  addMessage("--- 입론 단계 시작 ---", "system");
+};
