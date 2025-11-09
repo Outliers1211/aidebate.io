@@ -11,6 +11,7 @@ let turnIndex = 0;
 const chatBox = document.getElementById("chatBox");
 const stageLabel = document.getElementById("stage");
 const userInput = document.getElementById("userInput");
+const topicInput = document.getElementById("topic");
 
 function addMessage(text, sender) {
   const msg = document.createElement("div");
@@ -27,6 +28,7 @@ async function getAIResponse(prompt) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         role: "반대측",
+        topic: topicInput
         stage: stages[stageIndex].name,
         prompt,
       }),
@@ -40,11 +42,12 @@ async function getAIResponse(prompt) {
 
 async function sendMessage() {
   const text = userInput.value.trim();
-  if (!text) return;
+  const topic = topicInput.value.trim();
+  if (!text || !topic) return;
   const currentTurn = stages[stageIndex].order[turnIndex];
 
   if (currentTurn === "user") {
-    addMessage("찬성(인간): " + text, "user");
+    addMessage("찬성측: " + text, "user");
     userInput.value = "";
     turnIndex++;
     if (
@@ -52,7 +55,7 @@ async function sendMessage() {
       stages[stageIndex].order[turnIndex] === "ai"
     ) {
       const aiReply = await getAIResponse(text);
-      addMessage("반대(AI): " + aiReply, "ai");
+      addMessage("반대측: " + aiReply, "ai");
       turnIndex++;
     }
   }
