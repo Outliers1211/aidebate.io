@@ -29,7 +29,7 @@ async function getAIResponse(prompt) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         role: "반대측",
-        topic: topicInput
+        topic: topicInput,
         stage: stages[stageIndex].name,
         prompt,
       }),
