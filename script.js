@@ -1,7 +1,9 @@
 const stages = [
-  { name: "입론", order: ["user", "ai"] },
-  { name: "교차조사", order: ["ai", "user"] },
-  { name: "반론", order: ["ai", "user"] },
+  { name: "입론", order: ["user"] },
+  { name: "교차조사", order: ["ai"] },
+  { name: "입론", order: ["ai"] },
+  { name: "교차조사", order: ["user"] },
+  { name: "반론", order: ["ai", "user", "user", "ai"] },
   { name: "결론", order: ["user", "ai"] },
 ];
 
