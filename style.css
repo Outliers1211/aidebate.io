@@ -113,3 +113,19 @@ button:hover {
   color: white;
   font-weight: bold;
 }
+
+.loading {
+  text-align: center;
+  margin-top: 10px;
+  color: #0078ff;
+  font-style: italic;
+  font-size: 14px;
+  opacity: 1;
+  transition: 0.3s;
+}
+
+.hidden {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
