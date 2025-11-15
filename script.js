@@ -22,6 +22,14 @@ function addMessage(text, sender) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+function showLoading() {
+  document.getElementById("loading").classList.remove("hidden");
+}
+
+function hideLoading() {
+  document.getElementById("loading").classList.add("hidden");
+}
+
 async function getAIResponse(prompt) {
   try {
     const res = await fetch("https://ai-debate-worker.jeonjaehyeok1211.workers.dev", {
@@ -29,16 +37,14 @@ async function getAIResponse(prompt) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         role: "반대측",
-        topic: topicInput.value.trim(),  // topicInput.value 사용
+        topic: topicInput.value.trim(),
         stage: stages[stageIndex].name,
         prompt,
       }),
     });
 
-    // JSON 파싱
     const data = await res.json();
 
-    // 응답 반환
     return data.reply || "AI 응답 오류";
   } catch (e) {
     console.error(e);
@@ -61,7 +67,9 @@ async function sendMessage() {
       turnIndex < stages[stageIndex].order.length &&
       stages[stageIndex].order[turnIndex] === "ai"
     ) {
+      showLoading();
       const aiReply = await getAIResponse(text);
+      hideLoading();
       addMessage("반대측: " + aiReply, "ai");
       turnIndex++;
     }
@@ -76,8 +84,10 @@ async function sendMessage() {
       } 먼저 발언`;
       addMessage(`--- ${stages[stageIndex].name} 단계 시작 ---`, "system");
       if (stages[stageIndex].order[0] === "ai") {
+        showLoading();
         const aiIntro = await getAIResponse("다음 단계로 넘어감");
-        addMessage("반대(AI): " + aiIntro, "ai");
+        hideLoading();
+        addMessage("반대측: " + aiIntro, "ai");
         turnIndex++;
       }
     } else {
