@@ -94,6 +94,7 @@ window.onload = () => {
   addMessage("--- 입론 단계 시작 ---", "system");
 }; 
 
+
 // 시작 화면 제어
 window.addEventListener("load", () => {
   const overlay = document.getElementById("startOverlay");
