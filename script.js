@@ -1,3 +1,4 @@
+@@ -1,87 +1,93 @@
 const stages = [
   { name: "입론", order: ["user", "ai"] },
   { name: "교차조사", order: ["ai", "user"] },
@@ -29,6 +30,7 @@ async function getAIResponse(prompt) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         role: "반대측",
+        topic: topicInput,
         topic: topicInput.value.trim(),  // topicInput.value 사용
         stage: stages[stageIndex].name,
         prompt,
