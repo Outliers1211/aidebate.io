@@ -1,0 +1,78 @@
+body {
+  margin: 0;
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+/* Hero Section */
+.hero {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top, #1e3a8a, #020617);
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+.start-btn {
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #38bdf8;
+  transition: 0.3s;
+}
+
+.start-btn:hover {
+  background: #7dd3fc;
+  transform: scale(1.05);
+}
+
+/* Info Section */
+.info {
+  padding: 60px 10%;
+}
+
+.info h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.cards {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  padding: 20px;
+  border-radius: 14px;
+}
+
+.card h3 {
+  color: #38bdf8;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.7;
+}
