@@ -66,6 +66,7 @@ async function sendMessage() {
       turnIndex++;
     }
   }
+}
 
   if (turnIndex >= stages[stageIndex].order.length) {
     stageIndex++;
